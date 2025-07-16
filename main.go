@@ -1,15 +1,21 @@
 package main
 
 import (
+	"encoding/json"
+	"os"
+	"io"
+	"log"
 	"net/http"
 	"time"
- 	"github.com/rs/xid"
+
 	"github.com/gin-gonic/gin"
+	"github.com/rs/xid"
 )
 var recipes []Recipe
 func main () {
 	router := gin.Default()
 	router.POST("/recipes", NewRecipeHandler)
+	router.GET("/recipes", ListRecipesHandler)
 	router.Run()
 }
 
@@ -36,6 +42,27 @@ func NewRecipeHandler(c *gin.Context){
 
 }
 
+func ListRecipesHandler (c *gin.Context){
+	c.JSON(http.StatusOK, recipes)
+}
+
 func init(){
 	recipes = make([]Recipe, 0)
+
+	file, err := os.Open("recipes.json")
+	if err != nil {
+	   log.Printf("Error opening file: %v", err)
+	   return
+	}
+	defer file.Close()
+	fileData, err := io.ReadAll(file)
+	if err != nil {
+	   log.Printf("Error opening file: %v", err)
+	   return
+	}
+	
+	if err = json.Unmarshal(fileData, &recipes); err != nil {
+		log.Printf("Error parsing JSON: %v", err)
+		return
+	}
 }
