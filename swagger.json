@@ -1,0 +1,185 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Recipes API",
+    "description": "This is a simple API for managing recipes.",
+    "contact": {
+      "name": "Mitchel Egboko",
+      "email": "megboko@gmail.com"
+    }
+  },
+  "paths": {
+    "/recipes": {
+      "post": {
+        "summary": "Create a new recipe",
+        "operationId": "createRecipe",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "recipe",
+            "in": "body",
+            "description": "The recipe to create",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Recipe"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully created recipe",
+            "schema": {
+              "$ref": "#/definitions/Recipe"
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      },
+      "get": {
+        "summary": "List all recipes",
+        "operationId": "listRecipes",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "A list of recipes",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Recipe"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recipes/{id}": {
+      "get": {
+        "summary": "Get a specific recipe by ID",
+        "operationId": "getRecipeById",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the recipe to retrieve",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested recipe",
+            "schema": {
+              "$ref": "#/definitions/Recipe"
+            }
+          },
+          "404": {
+            "description": "Recipe not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a recipe by ID",
+        "operationId": "updateRecipe",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the recipe to update",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "recipe",
+            "in": "body",
+            "description": "The updated recipe data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Recipe"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated recipe",
+            "schema": {
+              "$ref": "#/definitions/Recipe"
+            }
+          },
+          "404": {
+            "description": "Recipe not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a recipe by ID",
+        "operationId": "deleteRecipe",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the recipe to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted recipe"
+          },
+          "404": {
+            "description": "Recipe not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Recipe": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "12345abcd"
+        },
+        "name": {
+          "type": "string",
+          "example": "Tomato Soup"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": ["soup", "vegetarian"]
+        },
+        "ingredients": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": ["Tomatoes", "Onion", "Garlic"]
+        },
+        "instructions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": ["Chop vegetables", "Boil water", "Add ingredients"]
+        },
+        "publishedAt": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-10-05T15:00:00Z"
+        }
+      }
+    }
+  }
+}
+
