@@ -1,3 +1,18 @@
+//  Recipes API
+//
+//  This is a simple recipes API. You can find out more about the API at https://github.com/PacktPublishing/Building-Distributed-Applications-in-Gin.
+//
+//  Schemes: http
+//  Host: localhost:8080
+//  BasePath: /
+//  Contact: Mitchel Egboko <megboko@gmail.com>
+//  Consumes:
+//  - application/json
+//
+//  Produces
+//  - application/json
+// swagger:meta
+
 package main
 
 import (
