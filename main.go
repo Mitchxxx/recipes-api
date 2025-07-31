@@ -22,6 +22,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
+	"github.com/joho/godotenv"
 	"github.com/mitchxxx/recipes-api/handlers"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -57,15 +58,24 @@ func init(){
 		log.Printf("Error parsing JSON: %v", err)
 		return
 	}*/
+
+	// Load .env file
+  err := godotenv.Load()
+  if err != nil {
+	log.Fatal("Failed to load .env file")
+  }
+
   ctx = context.Background()
+  mongoUri := os.Getenv("MONGO_URI")
+  mongoDatabase := os.Getenv("MONGO_DATABASE")
   client, err = mongo.Connect(ctx,
-	options.Client().ApplyURI(os.Getenv("MONGO_URI")))
+	options.Client().ApplyURI(mongoUri))
   if err = client.Ping(context.TODO(),
 	readpref.Primary()); err != nil {
 		log.Fatal(err)
 	}
 	log.Println("Connected to MongoDB")
-	collectionRecipes := client.Database(os.Getenv("MONGO_DATABASE")).Collection("recipes")
+	collectionRecipes := client.Database(mongoDatabase).Collection("recipes")
 
 	// Code to initialize the Redis client
 	redisClient := redis.NewClient(&redis.Options{
@@ -78,7 +88,7 @@ func init(){
 
 	recipesHandler = handlers.NewRecipeHandler(ctx, collectionRecipes, redisClient)
 
-	collectionUsers := client.Database(os.Getenv("MONGO_DATABASE")).Collection("users")
+	collectionUsers := client.Database(mongoDatabase).Collection("users")
 	authHandler = handlers.NewAuthHandler(ctx, collectionUsers)
 	/* code to add recipes to mongo database
 	var listOfRecipes [] interface{}
