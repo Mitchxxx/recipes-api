@@ -72,8 +72,8 @@ func (handler *AuthHandler) SigninHandler(c *gin.Context) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
+    jwtSecret := os.Getenv("JWT_SECRET")
+	tokenString, err := token.SignedString([]byte(jwtSecret))
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
