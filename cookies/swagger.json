@@ -10,6 +10,96 @@
     }
   },
   "paths": {
+    "/signin": {
+      "post": {
+        "summary": "Sign-in and generate a JWT token",
+        "operationId": "signinUser",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "credentials",
+            "in": "body",
+            "description": "User login credentials",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "example": "admin"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password123"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful login (JWT token returned)",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "type": "string",
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                },
+                "expires": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2025-08-01T16:45:30Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid username or password"
+          }
+        }
+      }
+    },
+    "/refresh": {
+      "post": {
+        "summary": "Refresh a JWT token",
+        "operationId": "refreshToken",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token to refresh",
+            "required": true,
+            "type": "string",
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful token refresh",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "type": "string",
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                },
+                "expires": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2025-08-01T18:00:00Z"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid or expired token"
+          }
+        }
+      }
+    },
     "/recipes": {
       "post": {
         "summary": "Create a new recipe",
@@ -36,6 +126,9 @@
           },
           "400": {
             "description": "Invalid input"
+          },
+          "401": {
+            "description": "Unauthorized. The user needs to send a valid token."
           }
         }
       },
@@ -114,6 +207,9 @@
           },
           "404": {
             "description": "Recipe not found"
+          },
+          "401": {
+            "description": "Unauthorized. The user needs to send a valid token."
           }
         }
       },
@@ -135,6 +231,9 @@
           },
           "404": {
             "description": "Recipe not found"
+          },
+          "401": {
+            "description": "Unauthorized. The user needs to send a valid token."
           }
         }
       }
@@ -182,4 +281,3 @@
     }
   }
 }
-

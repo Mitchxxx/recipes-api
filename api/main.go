@@ -24,8 +24,8 @@ import (
 	"syscall"
 	"time"
 
-	// "github.com/gin-contrib/sessions"
-	// redisStore "github.com/gin-contrib/sessions/redis"
+	"github.com/gin-contrib/sessions"
+	redisStore "github.com/gin-contrib/sessions/redis"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
 	"github.com/joho/godotenv"
@@ -121,9 +121,43 @@ func AuthMiddleware() gin.HandlerFunc{
 	}
 }
 
+func initSessionStore() sessions.Store {
+	redisAddress := os.Getenv("REDIS_ADDRESS")
+	redisPassword := os.Getenv("REDIS_PASSWORD")
+	sessionSecret := os.Getenv("SESSION_SECRET")
+
+	if redisAddress == "" || sessionSecret == ""{
+		log.Fatalf("REDIS_ADDRESS or SESSION_SECRET is not set")
+	}
+
+	store, err := redisStore.NewStore(10, "tcp", redisAddress, redisPassword, sessionSecret)
+	if err != nil {
+        log.Fatalf("Failed to create Redis session store: %v", err)
+    }
+	store.Options(sessions.Options{
+		Path: "/",
+		MaxAge: 3600,
+		HttpOnly: true,
+		Secure: false,
+		})
+	return store
+}
+
 
 func main () {
+
+	// redisAddress := os.Getenv("REDIS_ADDRESS")
+	// redisPassword := os.Getenv("REDIS_PASSWORD")
+	// sessionSecret := os.Getenv("SESSION_SECRET")
+
+
 	router := gin.Default()
+	store := initSessionStore()
+
+	if err != nil {
+		log.Fatalf("Failed to create Redis store: %v", err)
+	}
+	router.Use(sessions.Sessions("recipes_api", store))
 
 	router.GET("/recipes", recipesHandler.ListRecipesHandler)
 	router.POST("/signin", authHandler.SigninHandler)
