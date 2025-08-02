@@ -5,7 +5,6 @@ go 1.24.5
 require github.com/gin-gonic/gin v1.10.1
 
 require (
-	github.com/auth0-community/go-auth0 v1.0.0 // indirect
 	github.com/boj/redistore v1.4.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
@@ -25,7 +24,6 @@ require (
 	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
 	go.mongodb.org/mongo-driver v1.17.4 // indirect
 	golang.org/x/sync v0.13.0 // indirect
-	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
 )
 
 require (
