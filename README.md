@@ -198,3 +198,127 @@ Common error responses across endpoints:
 * 401 Unauthorized: Authentication or token issues.
 * 404 Not Found: Resource not found, such as missing recipe.
 * 500 Internal Server Error: Server-side issues.
+
+## Prerequisites
+
+Before running the Recipes API, ensure you have the following installed:
+* Go 1.20 or later
+* Git
+* (Optional) Redis for session storage
+* (Optional) Docker for containerized deployment
+
+## Installation & Setup
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/recipes-api.git
+cd recipes-api
+```
+
+2. Install dependencies:
+```bash
+go mod download
+```
+
+3. Configure environment variables:
+Create a `.env` file (or set environment variables) with the following:
+```
+AUTH0_DOMAIN=your-auth0-domain.auth0.com
+AUTH0_CLIENT_ID=your-client-id
+JWT_SECRET=your-jwt-secret
+REDIS_URL=redis://localhost:6379 (optional)
+PORT=8080
+```
+
+4. Run the application:
+```bash
+go run main.go
+```
+
+The API will be available at `http://localhost:8080`
+
+## Project Structure
+
+The repository contains multiple implementation variants:
+
+* **api/** - Core API implementation with basic authentication
+* **auth0/** - Implementation using Auth0 for authentication
+* **cookies/** - Implementation using cookie-based sessions
+* **handlers/** - HTTP request handlers for recipes and authentication
+* **models/** - Data models for recipes and users
+* **tmp/** - Temporary build outputs
+
+Each implementation follows the same API contract but uses different authentication mechanisms.
+
+## Running Tests
+
+Execute unit tests with:
+```bash
+go test ./...
+```
+
+For verbose output:
+```bash
+go test -v ./...
+```
+
+## API Documentation
+
+The API is documented using Swagger/OpenAPI specifications. View the specification in `swagger.json`.
+
+To view the API documentation:
+1. Open the Swagger UI at `http://localhost:8080/swagger/index.html` (if configured)
+2. Or use the `swagger.json` file in this repository
+
+## Performance Testing
+
+Use the included Apache Benchmark script for load testing:
+```bash
+./apache-benchmark.p
+```
+
+This will run performance tests against the API endpoints.
+
+## Building for Production
+
+Create a production build:
+```bash
+go build -o recipes-api
+```
+
+Run the compiled binary:
+```bash
+./recipes-api
+```
+
+## Docker Deployment
+
+Build a Docker image:
+```bash
+docker build -t recipes-api:latest .
+```
+
+Run the container:
+```bash
+docker run -p 8080:8080 --env-file .env recipes-api:latest
+```
+
+## Troubleshooting
+
+**JWT Token Expired**: Call the `/Refresh` endpoint with a valid token to get a new one.
+
+**401 Unauthorized**: Ensure you've obtained a valid JWT token via `/signin` and included it in the Authorization header as `Bearer <token>`.
+
+**Recipe Not Found**: Verify the recipe ID is correct and the recipe exists using `GET /recipes`.
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/your-feature`)
+3. Commit your changes (`git commit -m 'Add your feature'`)
+4. Push to the branch (`git push origin feature/your-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License. See LICENSE file for details.
